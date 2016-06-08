@@ -1,0 +1,13 @@
+FROM unibaktr/pythontex
+MAINTAINER Marcel Grossmann <whatever4711@gmail.com>
+
+RUN mkdir -p ${dir}/LoesungTemplate ${dir}/UebungTemplate
+
+COPY PyTex.py ${dir}/
+COPY metainfo.csv ${dir}/
+ADD LoesungTemplate ${dir}/LoesungTemplate/
+ADD UebungTemplate ${dir}/UebungTemplate/
+WORKDIR ${dir}
+
+ENTRYPOINT ["/pytex/PyTex.py"]
+CMD ["-h"]
