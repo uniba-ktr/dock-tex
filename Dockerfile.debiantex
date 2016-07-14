@@ -5,6 +5,7 @@ ENV dir /src
 RUN apt-get update && \
     apt-get install -y \
     make \
+    git \
     texlive-base \
     texlive-latex-extra \
     texlive-lang-german \
