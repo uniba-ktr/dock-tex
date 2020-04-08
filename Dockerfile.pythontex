@@ -9,9 +9,9 @@ RUN apt-get update && \
     texlive-lang-german \
     gnuplot \
     latexmk \
-    texlive-math-extra \
     texlive-fonts-extra \
     texlive-generic-extra \
     texlive-science && \
+    pip install -U Pygments && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
