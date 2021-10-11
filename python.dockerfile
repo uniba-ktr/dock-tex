@@ -10,7 +10,7 @@ RUN apt-get update && \
     gnuplot \
     latexmk \
     texlive-fonts-extra \
-    texlive-generic-extra \
+    #texlive-generic-extra \
     texlive-science && \
     pip install -U Pygments && \
     apt-get clean && \

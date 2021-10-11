@@ -1,0 +1,70 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+description: |
+  Install/configure docker with buildx to
+  cross-compile docker images and deploy them
+commands:
+  init_buildx:
+    parameters:
+      builder:
+        description: "BuildX Context"
+        type: string
+        default: "xbuilder"
+    steps:
+      - run:
+          name: "Prepare Docker buildx"
+          command: |
+            docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+            docker context create << parameters.builder >>
+            docker buildx create << parameters.builder >> --name << parameters.builder >> --driver docker-container --use
+            docker buildx inspect --bootstrap
+  install_dependencies:
+    parameters:
+      apk_packages:
+        description: "Additional needed packages for the build"
+        type: string
+        default: "make"
+    steps:
+      - run:
+          name: "Install << parameters.apk_packages >> "
+          command: |
+            apk add --no-cache << parameters.apk_packages >>
+jobs:
+  jessie:
+    working_directory: ~/docker-nodeexporter
+    docker:
+      - image: drpsychick/dind-buildx:latest
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.2
+      - install_dependencies
+      - init_buildx
+      - run:
+          name: Starting Multiarch Build
+          no_output_timeout: 120m
+          command: make jessie.dockerfile
+
+  python:
+    working_directory: ~/docker-nodeexporter
+    docker:
+      - image: drpsychick/dind-buildx:latest
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.2
+      - install_dependencies
+      - init_buildx
+      - run:
+          name: Starting Multiarch Build
+          no_output_timeout: 120m
+          command: make python.dockerfile
+
+workflows:
+  buildx-and-push:
+    jobs:
+      - jessie:
+          filters:
+              tags:
+                only: /.*/
