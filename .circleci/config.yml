@@ -64,7 +64,5 @@ jobs:
 workflows:
   buildx-and-push:
     jobs:
-      - jessie:
-          filters:
-              tags:
-                only: /.*/
+      - jessie
+      - python
