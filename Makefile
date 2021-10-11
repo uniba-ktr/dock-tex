@@ -4,7 +4,7 @@ builder = xbuilder
 comma := ,
 
 ifeq ($(REPO),)
-  REPO = dock-tex
+  REPO = latex
 endif
 ifeq ($(CIRCLE_TAG),)
 	TAG = latest
